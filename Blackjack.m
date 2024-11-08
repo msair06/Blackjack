@@ -67,7 +67,6 @@ cardLayoutScene3 = [
 ];
 
 cardEngine.drawScene(cardLayoutScene3);
-xlabel("2 player cards are flipped, 1 dealer card is flipped")
 
 title(" ")
 
