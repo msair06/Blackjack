@@ -20,7 +20,6 @@ cardLayout = [
 ];
 
 cardEngine.drawScene(cardLayout);
-xlabel("This is just the base scene with no cards drawn")
 % Wait for 'S' key press to continue to next scene
 title("Press S to continue to the next scene");
 while true
@@ -41,7 +40,6 @@ cardLayoutScene2 = [
 ];
 
 cardEngine.drawScene(cardLayoutScene2);
-xlabel("This has 4 cards face down before they are flipped")
 % Wait for 'S' key press to continue to the next scene
 title("Press S to reveal the cards");
 while true
