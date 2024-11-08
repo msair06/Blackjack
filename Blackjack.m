@@ -73,10 +73,3 @@ xlabel("2 player cards are flipped, 1 dealer card is flipped")
 
 title(" ")
 
-%There were a couple of challenges, 
-%For example I was trying to figure out how to randomly select a card 
-%from the card sprite deck. 
-% One question I have is it possible to stack different sprite decks on top 
-% of each other so you can have like a start button instead of key presses.
-% I eventually want to add buttons if possible
-
