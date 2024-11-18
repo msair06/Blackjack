@@ -6,3 +6,5 @@ for i = 1:width(numArray)
     spriteArray(i) = numberSprites(numArray(i)+1);
 end
 end
+
+% takahashi 24/11/18
