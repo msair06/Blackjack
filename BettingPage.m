@@ -17,7 +17,7 @@ digit_sprites = 11:20;
 
 % Initialize the displayed amount and undo stack
 current_amount = 0;  
-undo_stack = [0];    
+undo_stack = 0;    
 current_page = 1;    
 
 % Function to draw betting page
