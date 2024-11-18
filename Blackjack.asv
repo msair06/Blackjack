@@ -16,8 +16,8 @@ card_sprites_start = skip_sprites + 13 * card_suits_start + card_vals_start;
 cardsPlayed = card_sprites_start;
 
 % create 1 random card sprite on the player's side
-card_val = randi(13, 1, 1);
-card_suit = randi(4, 1, 1) - 1;
+card_val = randi(13, 1, 2);
+card_suit = randi(4, 1, 2) - 1;
 card_sprite = skip_sprites + 13 * card_suit + card_val;
 
 cardsPlayed(length(cardsPlayed) + 1) = card_sprite;
@@ -32,9 +32,6 @@ cardsPlayed(length(cardsPlayed) + 1) = card_sprite_dealer;
 playerCardIndex = 3;
 playerCards = [card_sprites_start, 1, 1, 1, 1, 1];
 
-dealerCardIndex = 2;
-dealerCards = [card_sprite_dealer, 3, 1, 1, 1, 1, 1];
-
 % draw the first scene
 drawScene(card_scene, [card_sprite_dealer, 3, 1, 1, 1, 1, 1; ...
     12, 1, 1, 1, 1, 1, 1; ...
@@ -42,6 +39,9 @@ drawScene(card_scene, [card_sprite_dealer, 3, 1, 1, 1, 1, 1; ...
     12, 1, 1, 1, 1, 1, 1; ...
     playerCards; ...
     1, 75, 76, 1, 77, 78, 1]);
+
+% get where the mouse was clicked
+[r, c, b] = getMouseInput(card_scene);
 
 playerPlaying = true;
 
@@ -51,61 +51,31 @@ playerPlaying = true;
 % dealer's card face down
 
 while(playerPlaying)
-    % get where the mouse was clicked
-    [r, c, b] = getMouseInput(card_scene);
-
     if r == 6 && (c == 5 || c == 6 )
-
-        while ~pulledNewCard
-            card_val_dealer = randi(13, 1, 1);
-            card_suit_dealer = randi(4, 1, 1) - 1;
-            card_sprite_dealer = skip_sprites + 13 * card_suit_dealer + card_val_dealer;
-
-            pulledNewCard = false;
-
-            for i = 1: length(cardsPlayed)
-                if cardsPlayed(i) == card_sprite_dealer
-                    pulledNewCard = true;
-                end
-            end
-        end
-
-        dealerCards(dealerCardIndex) = card_sprite_dealer;
-        dealerCardIndex = dealerCardIndex + 1;
-
-        drawScene(card_scene, [dealerCards; ...
+        drawScene(card_scene, [card_sprite_dealer, 3, 1, 1, 1, 1, 1; ...
         12, 1, 1, 1, 1, 1, 1; ...
         1, 1, 1, 1, 1, 1, 1; ...
         12, 1, 1, 1, 1, 1, 1; ...
-        playerCards; ...
+        card_sprites, 1, 1, 1, 1, 1; ...
         1, 75, 76, 1, 77, 78, 1]);
 
         playerPlaying = false;
     elseif r == 6 && (c == 2 || c == 3)
         pulledNewCard = false;
         
-        while ~pulledNewCard
-            card_val = randi(13, 1, 1);
-            card_suit = randi(4, 1, 1) - 1;
+        while pulledNewCard
+            card_val = randi(13, 1, 2);
+            card_suit = randi(4, 1, 2) - 1;
             card_sprite = skip_sprites + 13 * card_suit + card_val;
-
-            pulledNewCard = true;
-
-            for i = 1: length(cardsPlayed)
-                if cardsPlayed(i) == card_sprite
-                    pulledNewCard = false;
-                end
-            end
         end
 
-        playerCards(playerCardIndex) = card_sprite;
-        playerCardIndex = playerCardIndex + 1;
+        playerCards(playerCardIndex) = 
 
-        drawScene(card_scene, [card_sprite_dealer, 3, 1, 1, 1, 1, 1; ...
+        drawScene(card_scene, [card_sprites_dealer, 1, 1, 1, 1, 1; ...
         12, 1, 1, 1, 1, 1, 1; ...
         1, 1, 1, 1, 1, 1, 1; ...
         12, 1, 1, 1, 1, 1, 1; ...
-        playerCards; ...
+        card_sprites_start, 1, 1, 1, 1, 1; ...
         1, 75, 76, 1, 77, 78, 1]);
     end
 end
