@@ -35,11 +35,22 @@ playerCards = [card_sprites_start, 1, 1, 1, 1, 1];
 dealerCardIndex = 2;
 dealerCards = [card_sprite_dealer, 3, 1, 1, 1, 1, 1];
 
+% create a row that contains the value of the dealer's cards
+dealerHandValue = getHandValue(dealerCards);
+dealerValRow = ones(1,7);
+dealerValRow(1:length(numToSprites(dealerHandValue))) = numToSprites(dealerHandValue);
+
+%
+playerValRow = ones(1,7);
+playerHandValue = getHandValue(playerCards);
+playerValRow = ones(1,7);
+playerValRow(1:length(numToSprites(playerHandValue))) = numToSprites(playerHandValue);
+
 % draw the first scene
 drawScene(card_scene, [card_sprite_dealer, 3, 1, 1, 1, 1, 1; ...
-    12, 1, 1, 1, 1, 1, 1; ...
+    dealerValRow; ...
     1, 1, 1, 1, 1, 1, 1; ...
-    12, 1, 1, 1, 1, 1, 1; ...
+    playerValRow; ...
     playerCards; ...
     1, 75, 76, 1, 77, 78, 1]);
 
