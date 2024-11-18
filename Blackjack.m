@@ -4,7 +4,7 @@ clear
 % make the scenes using simpleGameEngine
 background = [53, 101, 77];
 
-card_scene = simpleGameEngine('retro_cards.png', 16, 16, 8, background);
+card_scene = simpleGameEngine('images/retro_cards.png', 16, 16, 8, background);
 
 skip_sprites = 20;
 
