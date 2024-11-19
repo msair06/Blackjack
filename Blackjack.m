@@ -6,7 +6,7 @@ global dealerValRow playerValRow
 % make the scenes using simpleGameEngine
 background = [53, 101, 77];
 
-card_scene = simpleGameEngine('images/retro_cards.png', 16, 16, 8, background);
+card_scene = simpleGameEngine('images/pixil-frame-0.png', 16, 16, 8, background);
 
 skip_sprites = 20;
 
@@ -59,6 +59,8 @@ while(playerPlaying)
     [r, c, b] = getMouseInput(card_scene);
 
     if r == 6 && (c == 5 || c == 6 )
+
+        pulledNewCard = false;
 
         while ~pulledNewCard
             card_val_dealer = randi(13, 1, 1);
