@@ -15,7 +15,7 @@ cardValues = [0 0 1  10 8  5  2  10 0 0
 
 for i = 1:width(hand)
     if cardValues(hand(i)) == 1 % ace logic
-        handValue = [handValue+1, handValue+10];
+        handValue = [handValue+1, handValue+11];
     else
     handValue = handValue + cardValues(hand(i));
     end
