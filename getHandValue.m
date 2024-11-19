@@ -14,10 +14,12 @@ cardValues = [0 0 1  10 8  5  2  10 0 0
 % linear indexing. This simplifies the logic for the rest of the function.
 
 for i = 1:width(hand)
-    if cardValues(hand(i)) == 1 % ace logic
-        handValue = [handValue+1, handValue+11];
+    if cardValues(hand(i)) == 1 && handValue < 11 % ace logic
+        handValue = handValue + 11;
+    elseif cardValues(hand(i)) == 1 && handValue >= 11
+        handValue = handValue + 1;
     else
-    handValue = handValue + cardValues(hand(i));
+        handValue = handValue + cardValues(hand(i));
     end
 end
 
