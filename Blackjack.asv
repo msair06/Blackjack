@@ -44,7 +44,7 @@ updateScreen(dealerCards,playerCards);
 % draw the first scene
 drawScene(card_scene, [card_sprite_dealer, 3, 1, 1, 1, 1, 1; ...
     dealerValRow; ...
-    1, 1, 1, 1, 1, 1, 1; ...
+    1, 1, 1, 1, 1, 1, restartButtonSprite; ...
     playerValRow; ...
     playerCards; ...
     1, 75, 76, 1, 77, 78, 1]);
@@ -59,9 +59,12 @@ playerPlaying = true;
 while(playerPlaying)
     % get where the mouse was clicked
     [r, c, b] = getMouseInput(card_scene);
+    if r == 3 && c == 7
+        playerPlaying = false;
+        break;
+    end
 
     if r == 6 && (c == 5 || c == 6 )
-
         pulledNewCard = false;
 
         while ~pulledNewCard
@@ -80,6 +83,9 @@ while(playerPlaying)
 
         dealerCards(dealerCardIndex) = card_sprite_dealer;
         dealerCardIndex = dealerCardIndex + 1;
+
+        win = false; %Needed to make win a public variable 
+
         % Determine WhoWon
         if getHandValue(dealerCards) > getHandValue(playerCards)
             win = false;
@@ -92,7 +98,7 @@ while(playerPlaying)
         updateScreen(dealerCards,playerCards);
         drawScene(card_scene, [dealerCards; ...
         dealerValRow; ...
-        1, 1, 1, 1, 1, 1, 1; ...
+        1, 1, 1, 1, 1, 1, restartButtonSprite; ...
         playerValRow; ...
         playerCards; ...
         1, 75, 76, 1, 77, 78, 1]);
@@ -131,7 +137,7 @@ while(playerPlaying)
 
         drawScene(card_scene, [card_sprite_dealer, 3, 1, 1, 1, 1, 1; ...
         dealerValRow; ...
-        1, 1, 1, 1, 1, 1, 1; ...
+        1, 1, 1, 1, 1, 1, restartButtonSprite; ...
         playerValRow; ...
         playerCards; ...
         1, 75, 76, 1, 77, 78, 1]);
@@ -143,13 +149,75 @@ while(playerPlaying)
     end
 end
 
+
 if ~playerPlaying
-    if win
-        fprintf('You Win')
-    elseif ~win
-        fprintf('You Lose')
-    else
-        fprintf('Tie')
+    if (getHandValue(playerCards) > getHandValue(dealerCards)) && (getHandValue(playerCards) <= 21)
+        % Handle Win Case
+        youWinArray = [1, 1, 1, 1, 1, 1;
+                       1, 1, 92, 92, 1, 1;
+                       1, 1, 79, 80, 1, 1;
+                       1, 1, 1, 1, 1, 1;
+                       1, 1, restartButtonSprite, 1, 1, 1];
+        pause(2.5);
+        drawScene(card_scene, youWinArray);
+        restart = false;
+    restartButtonRow = 5;
+    restartButtonCol = 3;
+    while ~restart
+        [r, c, b] = getMouseInput(card_scene);
+        if (r == restartButtonRow) && (c == restartButtonCol)
+            close all;
+            run('Blackjack.m');
+            restart = true;
+        end
     end
-    fprintf('\nRetry?')
+
+    elseif (getHandValue(playerCards) < getHandValue(dealerCards)) && (getHandValue(dealerCards) <= 21)
+          % Handle Lose Case
+        youLoseArray = [1, 1, 1, 1, 1, 1;
+                        1, 1, 94, 94, 1, 1;
+                        1, 1, 89, 90, 1, 1;
+                        1, 1, 1, 1, 1, 1;
+                        1, 1, restartButtonSprite, 1, 1, 1];
+        pause(2.5);
+        drawScene(card_scene, youLoseArray);
+        restart = false;
+    restartButtonRow = 5;
+    restartButtonCol = 3;
+    while ~restart
+        [r, c, b] = getMouseInput(card_scene);
+        if (r == restartButtonRow) && (c == restartButtonCol)
+            close all;
+            run('Blackjack.m');
+            restart = true;
+        end
+    end
+
+      
+
+    else
+        % Handle Tie Case
+        youTieArray = [1, 1, 1, 1, 1, 1;
+                       1, 1, 1, 1, 1, 1; 
+                       1, 1, restartButtonSprite, 1, 1, 1;
+                       1, 1, 1, 1, 1, 1;
+                       1, 1, 1, 1, 1, 1];
+        pause(2.5);
+        drawScene(card_scene, youTieArray);
+        restart = false;
+    restartButtonRow = 3;
+    restartButtonCol = 3;
+    while ~restart
+        [r, c, b] = getMouseInput(card_scene);
+        if (r == restartButtonRow) && (c == restartButtonCol)
+            close all;
+            run('Blackjack.m');
+            restart = true;
+        end
+    end
+    end
+
+    % Wait for user interaction for restart (common to all outcomes)
+    
 end
+

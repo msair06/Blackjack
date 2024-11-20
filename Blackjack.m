@@ -83,6 +83,9 @@ while(playerPlaying)
 
         dealerCards(dealerCardIndex) = card_sprite_dealer;
         dealerCardIndex = dealerCardIndex + 1;
+
+        win = false; %Needed to make win a public variable 
+
         % Determine WhoWon
         if getHandValue(dealerCards) > getHandValue(playerCards)
             win = false;
@@ -146,15 +149,120 @@ while(playerPlaying)
     end
 end
 
-run("Blackjack.m");
 
 if ~playerPlaying
-    if win
-        fprintf('You Win')
-    elseif ~win
-        fprintf('You Lose')
-    else
-        fprintf('Tie')
+    if (getHandValue(playerCards) > 21)
+        % Player Busted - Handle Lose Case
+        youLoseArray = [1, 1, 1, 1, 1, 1;
+                        1, 1, 94, 94, 1, 1;
+                        1, 1, 89, 90, 1, 1;
+                        1, 1, 1, 1, 1, 1;
+                        1, 1, restartButtonSprite, 1, 1, 1];
+        pause(2.5);
+        drawScene(card_scene, youLoseArray);
+         % Restart Logic (common for all outcomes)
+    restart = false;
+    restartButtonRow = 5; % Row for restart button
+    restartButtonCol = 3; % Column for restart button
+    while ~restart
+        [r, c, b] = getMouseInput(card_scene);
+        if (r == restartButtonRow) && (c == restartButtonCol)
+            close all;
+            run('Blackjack.m');
+            restart = true;
+        end
     end
-    fprintf('\nRetry?')
+
+    elseif (getHandValue(dealerCards) > 21)
+        % Dealer Busted - Handle Win Case
+        youWinArray = [1, 1, 1, 1, 1, 1;
+                       1, 1, 92, 92, 1, 1;
+                       1, 1, 79, 80, 1, 1;
+                       1, 1, 1, 1, 1, 1;
+                       1, 1, restartButtonSprite, 1, 1, 1];
+        pause(2.5);
+        drawScene(card_scene, youWinArray);
+         % Restart Logic (common for all outcomes)
+    restart = false;
+    restartButtonRow = 5; % Row for restart button
+    restartButtonCol = 3; % Column for restart button
+    while ~restart
+        [r, c, b] = getMouseInput(card_scene);
+        if (r == restartButtonRow) && (c == restartButtonCol)
+            close all;
+            run('Blackjack.m');
+            restart = true;
+        end
+    end
+
+    elseif (getHandValue(playerCards) > getHandValue(dealerCards))
+        % Player Wins - Higher Hand Value
+        youWinArray = [1, 1, 1, 1, 1, 1;
+                       1, 1, 92, 92, 1, 1;
+                       1, 1, 79, 80, 1, 1;
+                       1, 1, 1, 1, 1, 1;
+                       1, 1, restartButtonSprite, 1, 1, 1];
+        pause(2.5);
+        drawScene(card_scene, youWinArray);
+         % Restart Logic (common for all outcomes)
+    restart = false;
+    restartButtonRow = 5; % Row for restart button
+    restartButtonCol = 3; % Column for restart button
+    while ~restart
+        [r, c, b] = getMouseInput(card_scene);
+        if (r == restartButtonRow) && (c == restartButtonCol)
+            close all;
+            run('Blackjack.m');
+            restart = true;
+        end
+    end
+
+    elseif (getHandValue(playerCards) < getHandValue(dealerCards)) && (getHandValue(dealerCards) <= 21)
+        % Dealer Wins - Higher Hand Value
+        youLoseArray = [1, 1, 1, 1, 1, 1;
+                        1, 1, 94, 94, 1, 1;
+                        1, 1, 89, 90, 1, 1;
+                        1, 1, 1, 1, 1, 1;
+                        1, 1, restartButtonSprite, 1, 1, 1];
+        pause(2.5);
+        drawScene(card_scene, youLoseArray);
+         % Restart Logic (common for all outcomes)
+    restart = false;
+    restartButtonRow = 5; % Row for restart button
+    restartButtonCol = 3; % Column for restart button
+    while ~restart
+        [r, c, b] = getMouseInput(card_scene);
+        if (r == restartButtonRow) && (c == restartButtonCol)
+            close all;
+            run('Blackjack.m');
+            restart = true;
+        end
+    end
+
+    else
+        % Tie - Equal Hand Values
+        youTieArray = [1, 1, 1, 1, 1, 1;
+                       1, 1, 1, 1, 1, 1; 
+                       1, 1, restartButtonSprite, 1, 1, 1;
+                       1, 1, 1, 1, 1, 1;
+                       1, 1, 1, 1, 1, 1];
+        pause(2.5);
+        drawScene(card_scene, youTieArray);
+         % Restart Logic (common for all outcomes)
+    restart = false;
+    restartButtonRow = 3; % Row for restart button
+    restartButtonCol = 3; % Column for restart button
+    while ~restart
+        [r, c, b] = getMouseInput(card_scene);
+        if (r == restartButtonRow) && (c == restartButtonCol)
+            close all;
+            run('Blackjack.m');
+            restart = true;
+        end
+    end
+    end
+
+   
 end
+
+
