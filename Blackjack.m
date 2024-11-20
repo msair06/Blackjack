@@ -78,7 +78,14 @@ while(playerPlaying)
 
         dealerCards(dealerCardIndex) = card_sprite_dealer;
         dealerCardIndex = dealerCardIndex + 1;
-        
+        % Determine WhoWon
+        if getHandValue(dealerCards) > getHandValue(playerCards)
+            fprintf('The Dealer Won The Game ')
+        elseif getHandValue(dealerCards) == getHandValue(playerCards)
+            fprintf('Tied ')
+        else fprintf('You Win ')
+        end %it all
+
         updateScreen(dealerCards,playerCards);
         drawScene(card_scene, [dealerCards; ...
         dealerValRow; ...
@@ -109,11 +116,24 @@ while(playerPlaying)
         playerCardIndex = playerCardIndex + 1;
 
         updateScreen(dealerCards,playerCards);
+
+        % determine whether the player busted or got a blackjack
+        if getHandValue(playerCards) > 21
+            fprintf('U Busted everywhere')
+        elseif getHandValue(playerCards) == 21
+            fprintf('u Got A BlackJack')
+        end
+
         drawScene(card_scene, [card_sprite_dealer, 3, 1, 1, 1, 1, 1; ...
         dealerValRow; ...
         1, 1, 1, 1, 1, 1, 1; ...
         playerValRow; ...
         playerCards; ...
         1, 75, 76, 1, 77, 78, 1]);
+
+        % We Need A Restart Button On The Screen 
+        % Clicking The Button Restarts The Game And PlayerPlaying Will Be
+        % Equal To Zero
+
     end
 end
