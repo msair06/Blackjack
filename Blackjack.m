@@ -80,10 +80,11 @@ while(playerPlaying)
         dealerCardIndex = dealerCardIndex + 1;
         % Determine WhoWon
         if getHandValue(dealerCards) > getHandValue(playerCards)
-            fprintf('The Dealer Won The Game ')
+            win = false;
         elseif getHandValue(dealerCards) == getHandValue(playerCards)
-            fprintf('Tied ')
-        else fprintf('You Win ')
+            win = 3;
+        else
+            win = true;
         end %it all
 
         updateScreen(dealerCards,playerCards);
@@ -119,9 +120,11 @@ while(playerPlaying)
 
         % determine whether the player busted or got a blackjack
         if getHandValue(playerCards) > 21
-            fprintf('U Busted everywhere')
+            playerPlaying = false;
+            win = false;
         elseif getHandValue(playerCards) == 21
-            fprintf('u Got A BlackJack')
+            playerPlaying = false;          
+            win = true;
         end
 
         drawScene(card_scene, [card_sprite_dealer, 3, 1, 1, 1, 1, 1; ...
@@ -136,4 +139,15 @@ while(playerPlaying)
         % Equal To Zero
 
     end
+end
+
+if ~playerPlaying
+    if win
+        fprintf('You Win')
+    elseif ~win
+        fprintf('You Lose')
+    else
+        fprintf('Tie')
+    end
+    fprintf('\nRetry?')
 end
