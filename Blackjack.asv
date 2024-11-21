@@ -10,6 +10,30 @@ card_scene = simpleGameEngine('images/pixil-frame-0.png', 16, 16, 8, background)
 
 skip_sprites = 20;
 
+% =============== START PAGE ===================
+
+startPageArray = [
+    1, 1, 1, 1, 1, 1, 1; 
+    1, 5, 6, 7, 8, 9, 1; 
+    1, 10, 7, 8, 9, 1, 1;
+    1, 1, 1, 1, 1, 1, 1;
+    1, 1, 98, 99, 100, 1, 1;
+    1, 1, 1, 1, 1, 1, 1];
+
+drawScene(card_scene, startPageArray);
+drawScene(card_scene, startPageArray);
+
+gameStart = false;
+while ~gameStart
+    [r, c, b] = getMouseInput(card_scene); 
+    if r == 5 && (c == 3 || c == 4 || c == 5) 
+        gameStart = true;
+        close all;
+    end
+end
+
+% =============== GAME START ===================
+
 % create 2 random card sprites on the player's side
 card_vals_start = randi(13, 1, 2);
 card_suits_start = randi(4, 1, 2) - 1;
@@ -149,75 +173,109 @@ while(playerPlaying)
     end
 end
 
-
+% =============== WINNER/LOSER ===================
 if ~playerPlaying
-    if (getHandValue(playerCards) > getHandValue(dealerCards)) && (getHandValue(playerCards) <= 21)
-        % Handle Win Case
-        youWinArray = [1, 1, 1, 1, 1, 1;
-                       1, 1, 92, 92, 1, 1;
-                       1, 1, 79, 80, 1, 1;
-                       1, 1, 1, 1, 1, 1;
-                       1, 1, restartButtonSprite, 1, 1, 1];
-        pause(2.5);
-        drawScene(card_scene, youWinArray);
-        restart = false;
-    restartButtonRow = 5;
-    restartButtonCol = 3;
-    while ~restart
-        [r, c, b] = getMouseInput(card_scene);
-        if (r == restartButtonRow) && (c == restartButtonCol)
-            close all;
-            run('Blackjack.m');
-            restart = true;
-        end
-    end
+    % Initialize winner/loser sprites
+    winnerSprite = 92; 
+    loserSprite = 94;  
 
-    elseif (getHandValue(playerCards) < getHandValue(dealerCards)) && (getHandValue(dealerCards) <= 21)
-          % Handle Lose Case
-        youLoseArray = [1, 1, 1, 1, 1, 1;
-                        1, 1, 94, 94, 1, 1;
-                        1, 1, 89, 90, 1, 1;
-                        1, 1, 1, 1, 1, 1;
-                        1, 1, restartButtonSprite, 1, 1, 1];
-        pause(2.5);
-        drawScene(card_scene, youLoseArray);
-        restart = false;
-    restartButtonRow = 5;
-    restartButtonCol = 3;
-    while ~restart
-        [r, c, b] = getMouseInput(card_scene);
-        if (r == restartButtonRow) && (c == restartButtonCol)
-            close all;
-            run('Blackjack.m');
-            restart = true;
-        end
-    end
-
-      
-
+    if (getHandValue(playerCards) > 21)
+        % Player Busted - Dealer Wins
+        dealerValRow = [dealerValRow(1:end-1), winnerSprite]; 
+        playerValRow = [playerValRow(1:end-1), loserSprite];  
+    elseif (getHandValue(dealerCards) > 21)
+        % Dealer Busted - Player Wins
+        dealerValRow = [dealerValRow(1:end-1), loserSprite];  
+        playerValRow = [playerValRow(1:end-1), winnerSprite]; 
+    elseif (getHandValue(playerCards) > getHandValue(dealerCards))
+        % Player Wins
+        dealerValRow = [dealerValRow(1:end-1), loserSprite];  
+        playerValRow = [playerValRow(1:end-1), winnerSprite]; 
+    elseif (getHandValue(playerCards) < getHandValue(dealerCards))
+        % Dealer Wins
+        dealerValRow = [dealerValRow(1:end-1), winnerSprite]; 
+        playerValRow = [playerValRow(1:end-1), loserSprite];  
     else
-        % Handle Tie Case
-        youTieArray = [1, 1, 1, 1, 1, 1;
-                       1, 1, 1, 1, 1, 1; 
-                       1, 1, restartButtonSprite, 1, 1, 1;
-                       1, 1, 1, 1, 1, 1;
-                       1, 1, 1, 1, 1, 1];
-        pause(2.5);
-        drawScene(card_scene, youTieArray);
-        restart = false;
-    restartButtonRow = 3;
-    restartButtonCol = 3;
-    while ~restart
-        [r, c, b] = getMouseInput(card_scene);
-        if (r == restartButtonRow) && (c == restartButtonCol)
-            close all;
-            run('Blackjack.m');
-            restart = true;
-        end
-    end
+        % Tie - No winner or loser
+        dealerValRow = [dealerValRow(1:end-1), 1]; 
+        playerValRow = [playerValRow(1:end-1), 1]; 
     end
 
-    % Wait for user interaction for restart (common to all outcomes)
+    % Redraw the scene with updated `dealerValRow` and `playerValRow`
+    drawScene(card_scene, [dealerCards; ...
+        dealerValRow; ...
+        1, 1, 1, 1, 1, 1, restartButtonSprite; ...
+        playerValRow; ...
+        playerCards; ...
+        1, 75, 76, 1, 77, 78, 1]);
     
+    % Pause to display the result
+    pause(2.5);
+
+    % Proceed to the final result page or restart logic (if needed)
+    % ================= FINAL PAGE =====================
+
+% Determine which final page to display
+if (getHandValue(playerCards) > 21)
+    finalPageArray = [
+        1, 1, 1, 1, 1, 1, 1;
+        1, 1, 1, loserSprite, loserSprite, 1, 1; 
+        1, 1, 1, 89, 90, 1, 1; 
+        1, 1, 1, 1, 1, 1, 1;
+        1, 1, 1, restartButtonSprite, 1, 1, 1; 
+        1, 1, 1, 1, 1, 1, 1;
+    ];
+elseif (getHandValue(dealerCards) > 21)
+    finalPageArray = [
+        1, 1, 1, 1, 1, 1, 1;
+        1, 1, 1, winnerSprite, winnerSprite, 1, 1; 
+        1, 1, 1, 79, 80, 1, 1; 
+        1, 1, 1, 1, 1, 1, 1;
+        1, 1, 1, restartButtonSprite, 1, 1, 1; 
+        1, 1, 1, 1, 1, 1, 1;
+    ];
+elseif (getHandValue(playerCards) == getHandValue(dealerCards))
+    finalPageArray = [
+        1, 1, 1, 1, 1, 1, 1;
+        1, 1, 1, 1, 1, 1, 1; 
+        1, 1, 1, 95, 96, 1, 1; 
+        1, 1, 1, 1, 1, 1, 1;
+        1, 1, 1, restartButtonSprite, 1, 1, 1; 
+        1, 1, 1, 1, 1, 1, 1;
+    ];
+elseif (getHandValue(playerCards) > getHandValue(dealerCards))
+    finalPageArray = [
+        1, 1, 1, 1, 1, 1, 1;
+        1, 1, 1, winnerSprite, winnerSprite, 1, 1; 
+        1, 1, 1, 79, 80, 1, 1; 
+        1, 1, 1, 1, 1, 1, 1;
+        1, 1, 1, restartButtonSprite, 1, 1, 1; 
+        1, 1, 1, 1, 1, 1, 1;
+    ];
+else
+    finalPageArray = [
+        1, 1, 1, 1, 1, 1, 1;
+        1, 1, 1, loserSprite, loserSprite, 1, 1; 
+        1, 1, 1, 89, 90, 1, 1; 
+        1, 1, 1, 1, 1, 1, 1;
+        1, 1, 1, restartButtonSprite, 1, 1, 1; 
+        1, 1, 1, 1, 1, 1, 1;
+    ];
 end
 
+% Display the final page
+drawScene(card_scene, finalPageArray);
+
+% Wait for the player to click the restart button
+restart = false;
+restartButtonRow = 5; 
+restartButtonCol = 4; 
+while ~restart
+    [r, c, b] = getMouseInput(card_scene); 
+    if r == restartButtonRow && c == restartButtonCol 
+        close all;
+        run('Blackjack.m'); 
+        restart = true;
+    end
+end
+end
