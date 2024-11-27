@@ -32,6 +32,10 @@ while ~gameStart
     end
 end
 
+% =============== BETTING PAGE ===================
+
+current_amount = BettingPage(card_scene);
+
 % =============== GAME START ===================
 
 % create 2 random card sprites on the player's side
@@ -111,7 +115,6 @@ while(playerPlaying)
         dealerCards(dealerCardIndex) = card_sprite_dealer;
         dealerCardIndex = dealerCardIndex + 1;
 
-        win = false; 
         % Determine WhoWon
         if getHandValue(dealerCards) > getHandValue(playerCards)
             win = false;
@@ -178,6 +181,10 @@ end
 if ~playerPlaying
     winnerSprite = 92;
     loserSprite = 94;
+    dollarSprite = 88;
+    numberSprites = [91, 12:20];
+
+    final_amount = determinePayout(playerCards, dealerCards, current_amount);
 
     if (getHandValue(playerCards) > 21)
         % Player Busted - Dealer Wins
@@ -211,13 +218,23 @@ if ~playerPlaying
 
     pause(2.0);
 
+    finalAmountSprites = ones(1, 7);
+    finalAmountSprites(1) = dollarSprite;
+    amountStr = sprintf('%d', final_amount);
+    for i = 1:length(amountStr)
+        finalAmountSprites(i + 1) = numberSprites(str2double(amountStr(i)) + 1);
+    end
+    if length(amountStr) < 6
+        finalAmountSprites(length(amountStr) + 2:end) = 1;
+    end
+
     % ================= FINAL PAGE =====================
 
     if (getHandValue(playerCards) > 21)
         finalPageArray = [
             1, 1, 1, 1, 1, 1, 1;
-            1, 1, 1, loserSprite, loserSprite, 1, 1;
-            1, 1, 1, 89, 90, 1, 1;
+            1, 1, loserSprite, loserSprite, loserSprite, 1, 1;
+            finalAmountSprites;  
             1, 1, 1, 1, 1, 1, 1;
             1, 1, 1, 1, restartButtonSprite, 1, 1;
             1, 1, 1, 1, 1, 1, 1;
@@ -225,8 +242,8 @@ if ~playerPlaying
     elseif (getHandValue(dealerCards) > 21)
         finalPageArray = [
             1, 1, 1, 1, 1, 1, 1;
-            1, 1, 1, winnerSprite, winnerSprite, 1, 1;
-            1, 1, 1, 79, 80, 1, 1;
+            1, 1, winnerSprite, winnerSprite, winnerSprite, 1, 1;
+            finalAmountSprites;  
             1, 1, 1, 1, 1, 1, 1;
             1, 1, 1, 1, restartButtonSprite, 1, 1;
             1, 1, 1, 1, 1, 1, 1;
@@ -234,8 +251,8 @@ if ~playerPlaying
     elseif (getHandValue(playerCards) == getHandValue(dealerCards))
         finalPageArray = [
             1, 1, 1, 1, 1, 1, 1;
-            1, 1, 1, 1, 1, 1, 1;
-            1, 1, 1, 95, 96, 1, 1;
+            1, 1, 1, 73, 74, 1, 1;
+            finalAmountSprites;  
             1, 1, 1, 1, 1, 1, 1;
             1, 1, 1, 1, restartButtonSprite, 1, 1;
             1, 1, 1, 1, 1, 1, 1;
@@ -243,8 +260,8 @@ if ~playerPlaying
     elseif (getHandValue(playerCards) > getHandValue(dealerCards))
         finalPageArray = [
             1, 1, 1, 1, 1, 1, 1;
-            1, 1, 1, winnerSprite, winnerSprite, 1, 1;
-            1, 1, 1, 79, 80, 1, 1;
+            1, 1, winnerSprite, winnerSprite, winnerSprite, 1, 1;
+            finalAmountSprites;  
             1, 1, 1, 1, 1, 1, 1;
             1, 1, 1, 1, restartButtonSprite, 1, 1;
             1, 1, 1, 1, 1, 1, 1;
@@ -252,24 +269,24 @@ if ~playerPlaying
     else
         finalPageArray = [
             1, 1, 1, 1, 1, 1, 1;
-            1, 1, 1, loserSprite, loserSprite, 1, 1;
-            1, 1, 1, 89, 90, 1, 1;
+            1, 1, loserSprite, loserSprite, loserSprite, 1, 1;
+            finalAmountSprites;  
             1, 1, 1, 1, 1, 1, 1;
             1, 1, 1, 1, restartButtonSprite, 1, 1;
             1, 1, 1, 1, 1, 1, 1;
             ];
     end
 
-    drawScene(card_scene, finalPageArray);
+    drawScene(card_scene, finalPageArray);  
     restart = false;
-    restartButtonRow = 5; 
-    restartButtonCol = 5; 
+    restartButtonRow = 5;
+    restartButtonCol = 5;
     while ~restart
         [r, c, b] = getMouseInput(card_scene);
         if r == restartButtonRow && c == restartButtonCol
-            close all; 
-            clc; 
-            run('Blackjack.m'); 
+            close all;
+            clc;
+            run('Blackjack.m');
             restart = true;
         end
     end
