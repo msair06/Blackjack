@@ -72,7 +72,8 @@ function current_amount = BettingPage(card_scene)
                     current_amount = undo_stack(end); 
                     undo_stack(end) = [];             
                 else
-                    current_amount = 0;  % Default to 0 if stack is empty
+                    % Default to 0 if stack is empty
+                    current_amount = 0;  
                 end
 
                 % Update the displayed amount
