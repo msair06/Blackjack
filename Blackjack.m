@@ -43,7 +43,7 @@ end
 % =============== BETTING PAGE ===================
 
 % Display the betting page and get the current bet amount
-current_amount = BettingPage(card_scene);
+current_amount = bettingPage(card_scene);
 
 % =============== GAME START ===================
 

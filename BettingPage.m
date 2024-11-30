@@ -1,4 +1,4 @@
-function current_amount = BettingPage(card_scene)
+function current_amount = bettingPage(card_scene)
 
     chip_sprites = [81, 82, 83, 84, 85];  
     function_buttons = [86, 87];          
